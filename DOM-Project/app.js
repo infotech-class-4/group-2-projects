@@ -3,16 +3,41 @@ const select = document.querySelector("#users");
 
 const container = document.querySelector(".container");
 
+
+// users icin
+
 const getUsers = () => {
   return axios.get("https://jsonplaceholder.typicode.com/users");
 };
 
+
+// photos icin
+
+const getPhotos = (userId) => {
+  return axios.get(
+    `https://jsonplaceholder.typicode.com/albums/${userId}/photos`
+  );
+};
+
+
+// posts icin
+
+const getPosts = (userId) => {
+  return axios.get(
+    `https://jsonplaceholder.typicode.com/posts/?userId=${userId}`
+  );
+};
+
+
+
 let allUser = [];
+
 
 window.addEventListener("load", async () => {
   const { data } = await getUsers();
   allUser = data;
-  console.log(data);
+
+  //console.log(data);
 
   data.forEach((user) => {
     //console.log(user.name);
@@ -25,32 +50,22 @@ window.addEventListener("load", async () => {
   });
 });
 
-// fotograflar
-
-const getPhotos = (userId) => {
-  return axios.get(
-    `https://jsonplaceholder.typicode.com/albums/${userId}/photos`
-  );
-};
 
 
-// post
 
-const getPosts = (userId) => {
-  return axios.get(
-    `https://jsonplaceholder.typicode.com/posts/?userId=${userId}`
-  );
-};
 
 select.addEventListener("change", async (e) => {
   //console.log(e.target.value);
 
-  const getPhoto = await getPhotos(e.target.value);
+  const getFoto = await getPhotos(e.target.value);
+  //console.log(getFoto.data);
 
-  const getPost = await getPosts(e.target.value);
-  console.log(getPost);
+  const getMess = await getPosts(e.target.value);
+  console.log(getMess.data);
+  
 
-  createCard(getPhoto.data);
+  createCard(getFoto.data);
+
 });
 
 
@@ -86,7 +101,7 @@ const createCard = (photos) => {
                   <img src=${photo.url} alt="" class="img-body" /> 
 
                   <div>
-                    burayada post dan cekilen verilerin body parametsei gelcek
+                    post dan gelen veriler yazilacak
                   </div>
                 </div>
               </div>
