@@ -1,15 +1,12 @@
-
 const select = document.querySelector("#users");
 
 const container = document.querySelector(".container");
-
 
 // users icin
 
 const getUsers = () => {
   return axios.get("https://jsonplaceholder.typicode.com/users");
 };
-
 
 // photos icin
 
@@ -19,7 +16,6 @@ const getPhotos = (userId) => {
   );
 };
 
-
 // posts icin
 
 const getPosts = (userId) => {
@@ -28,10 +24,7 @@ const getPosts = (userId) => {
   );
 };
 
-
-
 let allUser = [];
-
 
 window.addEventListener("load", async () => {
   const { data } = await getUsers();
@@ -50,10 +43,6 @@ window.addEventListener("load", async () => {
   });
 });
 
-
-
-
-
 select.addEventListener("change", async (e) => {
   //console.log(e.target.value);
 
@@ -62,22 +51,18 @@ select.addEventListener("change", async (e) => {
 
   const getMess = await getPosts(e.target.value);
   console.log(getMess.data);
+
+  createCard(getFoto.data,getMess.data );
   
-
-  createCard(getFoto.data);
-
 });
-
-
 
 // Card yapisi
 
-
-
-const createCard = (photos) => {
+const createCard = (photos,posts) => {
   console.log(photos);
+  console.log(posts);
 
-  photos.forEach((photo) => {
+  photos.forEach((photo,post) => {
     const row = document.createElement("div");
 
     row.innerHTML = `
@@ -95,32 +80,32 @@ const createCard = (photos) => {
                   />
                   <label for="" class="label"> label gelecek</label>| Bret
 
-                  <i class="fa-regular fa-trash-can del"></i>
+                  <i class="fa-regular fa-trash-can del" onclick="delTik"></i>
                 </div>
                 <div class="media-body">
                   <img src=${photo.url} alt="" class="img-body" /> 
 
                   <div>
-                    post dan gelen veriler yazilacak
+               ${post.title}
                   </div>
                 </div>
               </div>
             </div>
             <div class="card-footer d-flex justify-content-between">
-            <div>
+           
             <i class="fa-solid fa-thumbs-up like"  onclick="likeTik()" onmouseover="likeHover()" onmouseout="likeHoverOut()" ></i>
               <span id="up">0</span>
-              </div>
-              <div>
-              <i class="fa-solid fa-thumbs-down dislike" style="color:red"></i>
+              
+         
+              <i class="fa-solid fa-thumbs-down dislike" onclick="disLikeTik()" onmouseover="disLikeHover()" onmouseout="disLikeHoverOut()"></i>
               <span id="down">0</span>
-              </div>
+            
               
 
-              <div> 
-              <i class="fa-solid fa-comment comment" style="color:pink"></i>
+            
+              <i class="fa-solid fa-comment comment" onclick="commentTik()" onmouseover="commentHover()" onmouseout="commentHoverOut()"></i>
               <span id="comment">0</span>
-              </div>
+            
 
            
             </div>
@@ -141,7 +126,7 @@ const likeTik = () => {
 
 const likeHover = () => {
   const like = document.querySelector(".like");
-  like.style.color = "red";
+  like.style.color = "blue";
 };
 
 const likeHoverOut = () => {
@@ -149,8 +134,49 @@ const likeHoverOut = () => {
   like.style.color = "black";
 };
 
+//disLike
+let countDislike = 0;
+const disLikeTik = () => {
+  console.log("tiklandi");
 
+  const disLikeSpan = document.querySelector("#down");
+  disLikeSpan.textContent = ++countLike;
+};
 
+const disLikeHover = () => {
+  const like = document.querySelector(".dislike");
+  like.style.color = "red";
+};
 
+const disLikeHoverOut = () => {
+  const like = document.querySelector(".dislike");
 
-   
+  like.style.color = "black";
+};
+
+// comment
+
+let countComment = 0;
+const commentTik = () => {
+  console.log("tiklandi");
+  const commentSpan = document.querySelector("#comment");
+  commentSpan.textContent = ++countComment;
+};
+
+const commentHover = () => {
+  const comment = document.querySelector(".comment");
+  comment.style.color = "pink";
+};
+
+const commentHoverOut = () => {
+  const comment = document.querySelector(".comment");
+  comment.style.color = "black";
+};
+
+// delete buttonu
+
+const delTik=()=>{
+  const deleteBtn =document.querySelector(".del")
+
+  
+}
