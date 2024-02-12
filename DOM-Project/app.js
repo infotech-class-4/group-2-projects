@@ -10,9 +10,9 @@ const getUsers = () => {
 
 // photos icin
 
-const getPhotos = (userId) => {
+const getPhotos = (albumId) => {
   return axios.get(
-    `https://jsonplaceholder.typicode.com/albums/${userId}/photos`
+    `https://jsonplaceholder.typicode.com/albums/${albumId}/photos`
   );
 };
 
@@ -24,11 +24,14 @@ const getPosts = (userId) => {
   );
 };
 
-let allUser = [];
+let allUser = []; // degisiklikler yapmak icin
 
+// ekran yuklenince gelecek veriler
 window.addEventListener("load", async () => {
   const { data } = await getUsers();
+
   allUser = data;
+  console.log(allUser);
 
   //console.log(data);
 
@@ -43,6 +46,8 @@ window.addEventListener("load", async () => {
   });
 });
 
+// secince card fonksiyonuna sectigimizin photo ve post bilgilerini gonderme
+
 select.addEventListener("change", async (e) => {
   //console.log(e.target.value);
 
@@ -52,18 +57,23 @@ select.addEventListener("change", async (e) => {
   const getMess = await getPosts(e.target.value);
   console.log(getMess.data);
 
-  createCard(getFoto.data,getMess.data );
-  
+  createCard(getFoto.data);
 });
 
 // Card yapisi
 
-const createCard = (photos,posts) => {
+const createCard = (photos) => {
   console.log(photos);
-  console.log(posts);
 
-  photos.forEach((photo,post) => {
+  photos.forEach((photo, index) => {
     const row = document.createElement("div");
+    row.className = "row";
+
+    let likeBtnId = `likeBtn_${index}`;
+    let likeSpanId = `likeSpan_${index}`;
+    var countLike = 0;
+
+    // console.log(likeBtnId);
 
     row.innerHTML = `
         <div class="col-lg-6">
@@ -78,34 +88,34 @@ const createCard = (photos,posts) => {
                     src=${photo.thumbnailUrl}
                     alt="Generic placeholder image"
                   />
-                  <label for="" class="label"> label gelecek</label>| Bret
+                  <label for="" class="label">isim</label>| Bret
 
-                  <i class="fa-regular fa-trash-can del" onclick="delTik"></i>
+                  <i class="fa-regular fa-trash-can del" ></i>
                 </div>
-                <div class="media-body">
-                  <img src=${photo.url} alt="" class="img-body" /> 
+                <div class="media-body mt-3">
+                  <img src=${photo.url} alt="" class="img-body w-100" /> 
 
-                  <div>
-               ${post.title}
+                  <div class="post">
+              postdan gelen veri
                   </div>
                 </div>
               </div>
             </div>
             <div class="card-footer d-flex justify-content-between">
-           
-            <i class="fa-solid fa-thumbs-up like"  onclick="likeTik()" onmouseover="likeHover()" onmouseout="likeHoverOut()" ></i>
-              <span id="up">0</span>
-              
-         
+             <div>
+            <i class="fa-solid fa-thumbs-up like" id=${likeBtnId}  onmouseover="likeHover()" onmouseout="likeHoverOut()" ></i>
+              <span id=${likeSpanId}>0</span>
+              </div>
+         <div>
               <i class="fa-solid fa-thumbs-down dislike" onclick="disLikeTik()" onmouseover="disLikeHover()" onmouseout="disLikeHoverOut()"></i>
               <span id="down">0</span>
-            
+          </div>  
               
 
-            
+            <div>
               <i class="fa-solid fa-comment comment" onclick="commentTik()" onmouseover="commentHover()" onmouseout="commentHoverOut()"></i>
               <span id="comment">0</span>
-            
+            </div>
 
            
             </div>
@@ -113,16 +123,41 @@ const createCard = (photos,posts) => {
         </div>`;
 
     container.append(row);
+
+    const likeBtn = document.querySelector("#" + likeBtnId);
+
+    // console.log(likeBtn);
+    likeBtn.addEventListener("click", () => {
+      const likeSpan = document.querySelector("#" + likeSpanId);
+      console.log(likeSpan);
+      likeSpan.textContent = ++countLike;
+    });
+
+    const delBtn = document.querySelector(".del");
+    delBtn.addEventListener("click", (e) => {
+      // //console.log(e.target);
+      delTik(e.target.parentElement.parentElement.parentElement.parentElement);
+      // e.target.parentElement.parentElement.parentElement.parentElement.remove();
+    });
   });
 };
 
-let countLike = 0;
-const likeTik = () => {
-  console.log("tiklandi");
-
-  const likeSpan = document.querySelector("#up");
-  likeSpan.textContent = ++countLike;
+//delete
+const delTik = (card) => {
+  card.remove();
 };
+
+// const likeTik = (span, countLike) => {
+//   // console.log(span.id);
+//   let likeBtnId = span.id;
+//   console.log(countLike);
+
+//   console.log(likeBtnId);
+
+//   const likeSpan = document.querySelector("#" + likeBtnId);
+
+//   likeSpan.textContent = ++countLike;
+// };
 
 const likeHover = () => {
   const like = document.querySelector(".like");
@@ -140,7 +175,7 @@ const disLikeTik = () => {
   console.log("tiklandi");
 
   const disLikeSpan = document.querySelector("#down");
-  disLikeSpan.textContent = ++countLike;
+  disLikeSpan.textContent = ++countDislike;
 };
 
 const disLikeHover = () => {
@@ -160,7 +195,11 @@ let countComment = 0;
 const commentTik = () => {
   console.log("tiklandi");
   const commentSpan = document.querySelector("#comment");
-  commentSpan.textContent = ++countComment;
+  const promptResult = prompt("comment");
+
+  if (promptResult) {
+    commentSpan.textContent = ++countComment;
+  }
 };
 
 const commentHover = () => {
@@ -172,11 +211,3 @@ const commentHoverOut = () => {
   const comment = document.querySelector(".comment");
   comment.style.color = "black";
 };
-
-// delete buttonu
-
-const delTik=()=>{
-  const deleteBtn =document.querySelector(".del")
-
-  
-}
