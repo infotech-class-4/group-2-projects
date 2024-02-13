@@ -24,6 +24,14 @@ const getPosts = (userId) => {
   );
 };
 
+// comment icin
+
+const getComments = (postId) => {
+  return axios.get(
+    `https://jsonplaceholder.typicode.com/comments/?postId=${postId}`
+  );
+};
+
 let allUser = []; // degisiklikler yapmak icin
 
 // ekran yuklenince gelecek veriler
@@ -57,13 +65,22 @@ select.addEventListener("change", async (e) => {
   const getMess = await getPosts(e.target.value);
   console.log(getMess.data);
 
-  createCard(getFoto.data);
+  // const getComment = await getComments(e.target.value);
+  // console.log(getComment.data);
+
+  const userId = e.target.value;
+
+  createCard(getFoto.data, getMess.data, userId);
 });
 
 // Card yapisi
 
-const createCard = (photos) => {
+const createCard = (photos, mess, userId) => {
   console.log(photos);
+  console.log(mess);
+  // console.log(comment);
+
+  let postIndex = 0;
 
   photos.forEach((photo, index) => {
     const row = document.createElement("div");
@@ -72,6 +89,20 @@ const createCard = (photos) => {
     let likeBtnId = `likeBtn_${index}`;
     let likeSpanId = `likeSpan_${index}`;
     var countLike = 0;
+
+    let dislikeBtnId = `dislikeBtn_${index}`;
+    let dislikeSpanId = `dislikeSpan_${index}`;
+    var discountLike = 0;
+
+    let commentId = `commentBtn_${index}`;
+    let commentSpanId = `commentSpan_${index}`;
+    var countComment = 0;
+
+    let trashBtnId = `trashBtn_${index}`;
+
+    if (postIndex == mess.length) {
+      postIndex = 0;
+    }
 
     // console.log(likeBtnId);
 
@@ -88,33 +119,37 @@ const createCard = (photos) => {
                     src=${photo.thumbnailUrl}
                     alt="Generic placeholder image"
                   />
-                  <label for="" class="label">isim</label>| Bret
+                  <label for="" class="label"> ${
+                    allUser[`${userId - 1}`].name
+                  } | ${allUser[`${userId - 1}`].username} </label> 
 
-                  <i class="fa-regular fa-trash-can del" ></i>
+                  <i class="fa-regular fa-trash-can" id=${trashBtnId} ></i>
                 </div>
                 <div class="media-body mt-3">
                   <img src=${photo.url} alt="" class="img-body w-100" /> 
 
-                  <div class="post">
-              postdan gelen veri
+                  <div class="post" >
+                  ${mess[`${postIndex++}`].body}
+                  
+                  
                   </div>
                 </div>
               </div>
             </div>
             <div class="card-footer d-flex justify-content-between">
              <div>
-            <i class="fa-solid fa-thumbs-up like" id=${likeBtnId}  onmouseover="likeHover()" onmouseout="likeHoverOut()" ></i>
+            <i class="fa-solid fa-thumbs-up" id=${likeBtnId} ></i>
               <span id=${likeSpanId}>0</span>
               </div>
          <div>
-              <i class="fa-solid fa-thumbs-down dislike" onclick="disLikeTik()" onmouseover="disLikeHover()" onmouseout="disLikeHoverOut()"></i>
-              <span id="down">0</span>
+              <i class="fa-solid fa-thumbs-down" id=${dislikeBtnId}></i>
+              <span id=${dislikeSpanId}>0</span>
           </div>  
               
 
             <div>
-              <i class="fa-solid fa-comment comment" onclick="commentTik()" onmouseover="commentHover()" onmouseout="commentHoverOut()"></i>
-              <span id="comment">0</span>
+              <i class="fa-solid fa-comment" id=${commentId}></i>
+              <span id=${commentSpanId}>0</span>
             </div>
 
            
@@ -129,85 +164,67 @@ const createCard = (photos) => {
     // console.log(likeBtn);
     likeBtn.addEventListener("click", () => {
       const likeSpan = document.querySelector("#" + likeSpanId);
-      console.log(likeSpan);
+      // console.log(likeSpan);
       likeSpan.textContent = ++countLike;
+      // likeBtn.style.color = "blue";
     });
 
-    const delBtn = document.querySelector(".del");
+    likeBtn.addEventListener("mouseover", () => {
+      likeBtn.style.color = "blue";
+    });
+
+    likeBtn.addEventListener("mouseout", () => {
+      likeBtn.style.color = "black";
+    });
+
+    const dislikeBtn = document.querySelector("#" + dislikeBtnId);
+
+    dislikeBtn.addEventListener("click", () => {
+      const dislikeSpan = document.querySelector("#" + dislikeSpanId);
+      // console.log(dislikeSpan);
+      dislikeSpan.textContent = ++discountLike;
+      // likeBtn.style.color = "blue"
+    });
+
+    dislikeBtn.addEventListener("mouseover", () => {
+      dislikeBtn.style.color = "red";
+    });
+
+    dislikeBtn.addEventListener("mouseout", () => {
+      dislikeBtn.style.color = "black";
+    });
+
+    const commentTik = document.querySelector("#" + commentId);
+
+    commentTik.addEventListener("click", () => {
+      // console.log("tiklandi");
+      const commentSpan = document.querySelector("#" + commentSpanId);
+      const promptResult = prompt("#" + commentId);
+
+      if (promptResult) {
+        commentSpan.textContent = ++countComment;
+      }
+    });
+
+    commentTik.addEventListener("mouseover", () => {
+      commentTik.style.color = "pink";
+    });
+
+    commentTik.addEventListener("mouseleave", () => {
+      commentTik.style.color = "black";
+    });
+
+    const delBtn = document.querySelector("#" + trashBtnId);
+
     delBtn.addEventListener("click", (e) => {
-      // //console.log(e.target);
-      delTik(e.target.parentElement.parentElement.parentElement.parentElement);
-      // e.target.parentElement.parentElement.parentElement.parentElement.remove();
+      e.target.parentElement.parentElement.parentElement.parentElement.remove();
     });
+
+    // mess.forEach((item) => {
+    //   const post = document.querySelector(".post");
+    //   // console.log(post);
+    //   post.textContent = item.body;
+    //   // console.log(item.body);
+    // });
   });
-};
-
-//delete
-const delTik = (card) => {
-  card.remove();
-};
-
-// const likeTik = (span, countLike) => {
-//   // console.log(span.id);
-//   let likeBtnId = span.id;
-//   console.log(countLike);
-
-//   console.log(likeBtnId);
-
-//   const likeSpan = document.querySelector("#" + likeBtnId);
-
-//   likeSpan.textContent = ++countLike;
-// };
-
-const likeHover = () => {
-  const like = document.querySelector(".like");
-  like.style.color = "blue";
-};
-
-const likeHoverOut = () => {
-  const like = document.querySelector(".like");
-  like.style.color = "black";
-};
-
-//disLike
-let countDislike = 0;
-const disLikeTik = () => {
-  console.log("tiklandi");
-
-  const disLikeSpan = document.querySelector("#down");
-  disLikeSpan.textContent = ++countDislike;
-};
-
-const disLikeHover = () => {
-  const like = document.querySelector(".dislike");
-  like.style.color = "red";
-};
-
-const disLikeHoverOut = () => {
-  const like = document.querySelector(".dislike");
-
-  like.style.color = "black";
-};
-
-// comment
-
-let countComment = 0;
-const commentTik = () => {
-  console.log("tiklandi");
-  const commentSpan = document.querySelector("#comment");
-  const promptResult = prompt("comment");
-
-  if (promptResult) {
-    commentSpan.textContent = ++countComment;
-  }
-};
-
-const commentHover = () => {
-  const comment = document.querySelector(".comment");
-  comment.style.color = "pink";
-};
-
-const commentHoverOut = () => {
-  const comment = document.querySelector(".comment");
-  comment.style.color = "black";
 };
