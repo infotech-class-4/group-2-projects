@@ -57,24 +57,45 @@ select.addEventListener("change", async (e) => {
   const getMess = await getPosts(e.target.value);
   console.log(getMess.data);
 
-  createCard(getFoto.data);
+  const userId = e.target.value;
+
+  createCard(getFoto.data, getMess.data, userId);
 });
 
 // Card yapisi
 
-const createCard = (photos) => {
+const createCard = (photos, mess, userId) => {
   console.log(photos);
+  console.log(mess);
+
+  let postIndex = 0;
 
   photos.forEach((photo, index) => {
-    const row = document.createElement("div");
-    row.className = "row";
+    // iconlarin countlarinin ve hover renklerinin degismesi icin
 
     let likeBtnId = `likeBtn_${index}`;
     let likeSpanId = `likeSpan_${index}`;
-    var countLike = 0;
+    let countLike = 0;
 
     // console.log(likeBtnId);
 
+    let disLikeBtnId = `disLikeBtn_${index}`;
+    let disLikeSpanId = `disLikeSpan_${index}`;
+    let countDislike = 0;
+    //console.log(disLikeBtnId);
+
+    let commentBtnId = `commentBtn_${index}`;
+    let commentSpanId = `commentSpan_${index}`;
+    let countComment = 0;
+
+    let delBtnId = `delBtn_${index}`;
+
+    if (postIndex == mess.length) {
+      postIndex = 0;
+    }
+
+    const row = document.createElement("div");
+    row.className = "row";
     row.innerHTML = `
         <div class="col-lg-6">
           <div class="card mb-4">
@@ -88,33 +109,35 @@ const createCard = (photos) => {
                     src=${photo.thumbnailUrl}
                     alt="Generic placeholder image"
                   />
-                  <label for="" class="label">isim</label>| Bret
+                  <label for="" class="label">${
+                    allUser[`${userId - 1}`].name
+                  }|${allUser[`${userId - 1}`].username}</label> 
 
-                  <i class="fa-regular fa-trash-can del" ></i>
+                  <i class="fa-regular fa-trash-can " id=${delBtnId} ></i>
                 </div>
                 <div class="media-body mt-3">
                   <img src=${photo.url} alt="" class="img-body w-100" /> 
 
                   <div class="post">
-              postdan gelen veri
+              ${mess[`${postIndex++}`].body}
                   </div>
                 </div>
               </div>
             </div>
             <div class="card-footer d-flex justify-content-between">
              <div>
-            <i class="fa-solid fa-thumbs-up like" id=${likeBtnId}  onmouseover="likeHover()" onmouseout="likeHoverOut()" ></i>
+            <i class="fa-solid fa-thumbs-up " id=${likeBtnId}  ></i>
               <span id=${likeSpanId}>0</span>
               </div>
          <div>
-              <i class="fa-solid fa-thumbs-down dislike" onclick="disLikeTik()" onmouseover="disLikeHover()" onmouseout="disLikeHoverOut()"></i>
-              <span id="down">0</span>
+              <i class="fa-solid fa-thumbs-down " id=${disLikeBtnId} ></i>
+              <span id=${disLikeSpanId}>0</span>
           </div>  
               
 
             <div>
-              <i class="fa-solid fa-comment comment" onclick="commentTik()" onmouseover="commentHover()" onmouseout="commentHoverOut()"></i>
-              <span id="comment">0</span>
+              <i class="fa-solid fa-comment comment" id=${commentBtnId} ></i>
+              <span id=${commentSpanId}>0</span>
             </div>
 
            
@@ -124,90 +147,61 @@ const createCard = (photos) => {
 
     container.append(row);
 
+    //? like
     const likeBtn = document.querySelector("#" + likeBtnId);
-
     // console.log(likeBtn);
+
     likeBtn.addEventListener("click", () => {
       const likeSpan = document.querySelector("#" + likeSpanId);
-      console.log(likeSpan);
+      //console.log(likeSpan);
+
       likeSpan.textContent = ++countLike;
+
+      likeBtn.style.color = "blue";
     });
 
-    const delBtn = document.querySelector(".del");
+    likeBtn.addEventListener("mouseleave", () => {
+      likeBtn.style.color = "black";
+    });
+
+    //?disLike
+    const disLikeBtn = document.querySelector("#" + disLikeBtnId);
+    //console.log(disLikeBtn);
+    disLikeBtn.addEventListener("click", () => {
+      const disLikeSpan = document.querySelector("#" + disLikeSpanId);
+      //console.log(disLikeSpan);
+      disLikeSpan.textContent = ++countDislike;
+
+      disLikeBtn.style.color = "red";
+    });
+
+    disLikeBtn.addEventListener("mouseleave", () => {
+      disLikeBtn.style.color = "black";
+    });
+
+    //?comment
+    const commentBtn = document.querySelector("#" + commentBtnId);
+
+    commentBtn.addEventListener("click", () => {
+      const commentSpan = document.querySelector("#" + commentSpanId);
+      const promptRequest = prompt("comment");
+      if (promptRequest) {
+        commentSpan.textContent = ++countComment;
+      }
+    });
+    commentBtn.addEventListener("mouseover", () => {
+      commentBtn.style.color = "pink";
+    });
+
+    commentBtn.addEventListener("mouseout", () => {
+      commentBtn.style.color = "black";
+    });
+
+    //?delete
+    const delBtn = document.querySelector("#" + delBtnId);
     delBtn.addEventListener("click", (e) => {
-      // //console.log(e.target);
-      delTik(e.target.parentElement.parentElement.parentElement.parentElement);
-      // e.target.parentElement.parentElement.parentElement.parentElement.remove();
+      e.target.parentElement.parentElement.parentElement.parentElement.remove();
     });
   });
-};
 
-//delete
-const delTik = (card) => {
-  card.remove();
-};
-
-// const likeTik = (span, countLike) => {
-//   // console.log(span.id);
-//   let likeBtnId = span.id;
-//   console.log(countLike);
-
-//   console.log(likeBtnId);
-
-//   const likeSpan = document.querySelector("#" + likeBtnId);
-
-//   likeSpan.textContent = ++countLike;
-// };
-
-const likeHover = () => {
-  const like = document.querySelector(".like");
-  like.style.color = "blue";
-};
-
-const likeHoverOut = () => {
-  const like = document.querySelector(".like");
-  like.style.color = "black";
-};
-
-//disLike
-let countDislike = 0;
-const disLikeTik = () => {
-  console.log("tiklandi");
-
-  const disLikeSpan = document.querySelector("#down");
-  disLikeSpan.textContent = ++countDislike;
-};
-
-const disLikeHover = () => {
-  const like = document.querySelector(".dislike");
-  like.style.color = "red";
-};
-
-const disLikeHoverOut = () => {
-  const like = document.querySelector(".dislike");
-
-  like.style.color = "black";
-};
-
-// comment
-
-let countComment = 0;
-const commentTik = () => {
-  console.log("tiklandi");
-  const commentSpan = document.querySelector("#comment");
-  const promptResult = prompt("comment");
-
-  if (promptResult) {
-    commentSpan.textContent = ++countComment;
-  }
-};
-
-const commentHover = () => {
-  const comment = document.querySelector(".comment");
-  comment.style.color = "pink";
-};
-
-const commentHoverOut = () => {
-  const comment = document.querySelector(".comment");
-  comment.style.color = "black";
 };
