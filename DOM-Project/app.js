@@ -1,6 +1,7 @@
 const select = document.querySelector("#users");
 
-const container = document.querySelector(".container");
+const container = document.querySelector(".cont_2");
+console.log(container);
 
 // users icin
 
@@ -65,8 +66,12 @@ select.addEventListener("change", async (e) => {
 // Card yapisi
 
 const createCard = (photos, mess, userId) => {
+  container.innerHTML = "";
   console.log(photos);
   console.log(mess);
+
+  const findIndexUser = allUser.findIndex((user) => user.id == userId);
+  console.log(findIndexUser);
 
   let postIndex = 0;
 
@@ -96,6 +101,7 @@ const createCard = (photos, mess, userId) => {
 
     const row = document.createElement("div");
     row.className = "row";
+
     row.innerHTML = `
         <div class="col-lg-6">
           <div class="card mb-4">
@@ -110,8 +116,8 @@ const createCard = (photos, mess, userId) => {
                     alt="Generic placeholder image"
                   />
                   <label for="" class="label">${
-                    allUser[`${userId - 1}`].name
-                  }|${allUser[`${userId - 1}`].username}</label> 
+                    allUser[`${findIndexUser}`].name
+                  }|${allUser[`${findIndexUser}`].username}</label> 
 
                   <i class="fa-regular fa-trash-can " id=${delBtnId} ></i>
                 </div>
@@ -204,4 +210,8 @@ const createCard = (photos, mess, userId) => {
     });
   });
 
+  // posts.forEach((item,index)=>{
+  //   const post=document.querySelector(".post")
+  //   post.textContent=item.body
+  // })
 };
