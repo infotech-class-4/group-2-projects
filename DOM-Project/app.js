@@ -89,9 +89,7 @@ const createCard = (photos, mess, userId) => {
   photos.forEach((photo, index) => {
     // iconlarin countlarinin ve hover renklerinin degismesi icin
 
-    // const genel={
-    //   btnId:"likeBtnId "
-    // }
+   
     let likeBtnId = `likeBtn_${index}`;
     let likeSpanId = `likeSpan_${index}`;
     let countLike = 0;
