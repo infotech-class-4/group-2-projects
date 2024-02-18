@@ -25,11 +25,12 @@ const getPosts = (userId) => {
   );
 };
 
-let allUser = []; // degisiklikler yapmak icin
+let allUser = []; 
 
 // ekran yuklenince gelecek veriler
 window.addEventListener("load", async () => {
   const { data } = await getUsers();
+  console.log(getUsers);
 
   allUser = data;
   console.log(allUser);
@@ -53,10 +54,12 @@ select.addEventListener("change", async (e) => {
   //console.log(e.target.value);
 
   const getFoto = await getPhotos(e.target.value);
-  //console.log(getFoto.data);
+  // console.log(getPhotos);
+  // console.log(getFoto);
+  // console.log(getFoto.data);
 
   const getMess = await getPosts(e.target.value);
-  console.log(getMess.data);
+  //console.log(getMess.data);
 
   const userId = e.target.value;
 
@@ -67,11 +70,11 @@ select.addEventListener("change", async (e) => {
 
 const createCard = (photos, mess, userId) => {
   container.innerHTML = "";
-  console.log(photos);
+  //console.log(photos);
   console.log(mess);
 
   const findIndexUser = allUser.findIndex((user) => user.id == userId);
-  console.log(findIndexUser);
+  //console.log(findIndexUser);
 
   let postIndex = 0;
 
@@ -155,7 +158,7 @@ const createCard = (photos, mess, userId) => {
           </div>
         </div>`;
 
-    container.append(row);
+    container.appendChild(row);
 
     //? like
     const likeBtn = document.querySelector("#" + likeBtnId);
