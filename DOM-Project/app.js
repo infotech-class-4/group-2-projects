@@ -101,8 +101,10 @@ const createCard = (photos, mess, userId) => {
 
     const row = document.createElement("div");
     row.className = "row";
-    row.style.marginLeft="20rem"
-    row.style.width="100%"
+    row.style.display="flex"
+    row.style.justifyContent="center"
+    row.style.alignItems="center"
+
 
     row.innerHTML = `
         <div class="col-lg-6">
