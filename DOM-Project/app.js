@@ -16,7 +16,7 @@ const getPhotos = (albumId) => {
     `https://jsonplaceholder.typicode.com/albums/${albumId}/photos`
   );
 };
-
+// veri cekmenin bir diger yolu da su sekilde.
 // const getPhotos = (albumId) => {
 //   return axios.get(
 //     `https://jsonplaceholder.typicode.com/photos/?albumId=${albumId}`
@@ -30,6 +30,8 @@ const getPosts = (userId) => {
     `https://jsonplaceholder.typicode.com/posts/?userId=${userId}`
   );
 };
+
+
 
 let allUser = []; 
 
