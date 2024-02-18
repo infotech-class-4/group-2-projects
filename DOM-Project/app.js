@@ -101,6 +101,8 @@ const createCard = (photos, mess, userId) => {
 
     const row = document.createElement("div");
     row.className = "row";
+    row.style.marginLeft="20rem"
+    row.style.width="100%"
 
     row.innerHTML = `
         <div class="col-lg-6">
@@ -117,7 +119,7 @@ const createCard = (photos, mess, userId) => {
                   />
                   <label for="" class="label">${
                     allUser[`${findIndexUser}`].name
-                  }|${allUser[`${findIndexUser}`].username}</label> 
+                  } |  ${allUser[`${findIndexUser}`].username}</label> 
 
                   <i class="fa-regular fa-trash-can " id=${delBtnId} ></i>
                 </div>
