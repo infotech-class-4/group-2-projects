@@ -17,6 +17,12 @@ const getPhotos = (albumId) => {
   );
 };
 
+// const getPhotos = (albumId) => {
+//   return axios.get(
+//     `https://jsonplaceholder.typicode.com/photos/?albumId=${albumId}`
+//   );
+// };
+
 // posts icin
 
 const getPosts = (userId) => {
@@ -81,6 +87,9 @@ const createCard = (photos, mess, userId) => {
   photos.forEach((photo, index) => {
     // iconlarin countlarinin ve hover renklerinin degismesi icin
 
+    // const genel={
+    //   btnId:"likeBtnId "
+    // }
     let likeBtnId = `likeBtn_${index}`;
     let likeSpanId = `likeSpan_${index}`;
     let countLike = 0;
@@ -126,7 +135,9 @@ const createCard = (photos, mess, userId) => {
                     allUser[`${findIndexUser}`].name
                   } |  ${allUser[`${findIndexUser}`].username}</label> 
 
-                  <i class="fa-regular fa-trash-can " id=${delBtnId} ></i>
+<i class="fa-regular fa-trash-can " id=${delBtnId} ></i>
+
+                  
                 </div>
                 <div class="media-body mt-3">
                   <img src=${photo.url} alt="" class="img-body w-100" /> 
@@ -213,7 +224,11 @@ const createCard = (photos, mess, userId) => {
     //?delete
     const delBtn = document.querySelector("#" + delBtnId);
     delBtn.addEventListener("click", (e) => {
-      e.target.parentElement.parentElement.parentElement.parentElement.remove();
+      const confirmQuestion=confirm("Do you want clear?")
+      if(confirmQuestion){
+        e.target.parentElement.parentElement.parentElement.parentElement.remove();
+      }
+      
     });
   });
 
